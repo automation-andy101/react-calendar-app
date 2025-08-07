@@ -84,6 +84,17 @@ const CalendarApp = () => {
         setShowEventPopup(true)
     }
 
+    const handleDeleteEvent = (eventId) => {
+        const updatedEventsArray = events.filter((event) => event.id !== eventId)
+
+        setEvents(updatedEventsArray)
+    }
+
+    const handleTimeChange = (e) => {
+        const { name, value } = e.target
+        setEventTime((prevTime) => ({ ...prevTime, [name]: value.padStart(2, '') }))
+    }
+
     return (
         <div className="calendar-app">
             <div className="calenadr">
@@ -132,7 +143,7 @@ const CalendarApp = () => {
                                 max={24} 
                                 className="hours" 
                                 value={eventTime.hours} 
-                                onChange={(e) => setEventTime({ ...eventTime, hours: e.target.value })} 
+                                onChange={handleTimeChange} 
                             />
                             <input 
                                 type="number" 
@@ -141,7 +152,7 @@ const CalendarApp = () => {
                                 max={60} 
                                 className="minutes" 
                                 value={eventTime.minutes} 
-                                onChange={(e) => setEventTime({ ...eventTime, minutes: e.target.value })} 
+                                onChange={handleTimeChange} 
 
                             />
                         </div>
@@ -154,7 +165,9 @@ const CalendarApp = () => {
                                 }
                             }}
                         ></textarea>
-                        <button className="event-popup-btn" onClick={handleEventSubmit}>Add Event</button>
+                        <button className="event-popup-btn" onClick={handleEventSubmit}>
+                            {editingEvent ? "Update Event" : "Add Event"}
+                        </button>
                         <button className="close-event-popup" onClick={() => setShowEventPopup(false)}>
                             <i className="bx bx-x"></i>
                         </button>
@@ -172,7 +185,7 @@ const CalendarApp = () => {
                         <div className="event-text">{event.text}</div>
                         <div className="event-buttons">
                             <i className="bx bxs-edit-alt" onClick={() => handleEditEvent(event)}></i>
-                            <i className="bx bx-message-alt-x"></i>
+                            <i className="bx bx-message-alt-x" onClick={() => handleDeleteEvent(event.id)}></i>
                         </div>
                     </div>
                 ))}
